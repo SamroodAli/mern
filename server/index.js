@@ -1,9 +1,9 @@
+require("dotenv").config({ path: "./dev.env" });
 const express = require("express");
 const cors = require("cors");
-const dotenv = require("dotenv");
 const morgan = require("morgan");
 
-dotenv.config({ path: "./dev.env" });
+const { connectToDb } = require("./db/connection");
 
 const PORT = process.env.PORT || 3000;
 
@@ -19,6 +19,11 @@ app.get("/status", function (req, res) {
   res.json({ up: true });
 });
 
-app.listen(PORT, () => {
-  console.log(`App listening on ${PORT}`);
+app.listen(PORT, async () => {
+  try {
+    console.log(`App listening on ${PORT}`);
+    await connectToDb();
+  } catch (err) {
+    console.err(err);
+  }
 });
